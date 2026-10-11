@@ -1,142 +1,74 @@
 "use client";
-import React from "react";
-import { Terminal, ShieldAlert, Cpu, Lock, Fingerprint, Eye, Flame, ArrowRight, Activity } from "lucide-react";
 
-export default function HomePage() {
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+export default function Home() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("userLoggedIn");
+    if (!isLoggedIn) {
+      router.push("/login");
+    } else {
+      setLoading(false);
+    }
+  }, [router]);
+
+  if (loading) {
+    return <div className="min-h-screen bg-slate-950 text-emerald-400 font-mono flex items-center justify-center">Authenticating...</div>;
+  }
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-mono relative soc-scanline bg-cyber-grid overflow-hidden">
-      
-      {/* TOP NAVIGATION BAR */}
-      <nav className="border-b border-emerald-900/60 bg-slate-950/90 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center">
-            <Eye className="w-7 h-7 text-red-500 animate-pulse" />
-            <span className="absolute -top-1 -right-1 flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-            </span>
-          </div>
-          <div>
-            <span className="text-xl font-black tracking-widest text-emerald-400 glow-green">RAVEN//TRACE</span>
-            <span className="text-[10px] block text-red-500 tracking-wider font-bold">SOC CTF PLATFORM v2.6</span>
-          </div>
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-mono">
+      {/* Top Navbar */}
+      <nav className="flex items-center justify-between p-4 border-b border-slate-800 max-w-7xl mx-auto">
+        <div className="flex items-center gap-2">
+          <div className="text-emerald-400 font-bold text-lg">RAVEN//TRACE</div>
+          <span className="text-[10px] text-red-500 border border-red-500/40 bg-red-950/30 px-1.5 py-0.5 rounded">
+            SOC CTF PLATFORM v2.6
+          </span>
         </div>
 
         <div className="flex items-center gap-6 text-sm">
-          <a href="/challenges" className="hover:text-emerald-400 flex items-center gap-1 transition"><Terminal className="w-4 h-4" /> Challenges</a>
-          <a href="/events" className="hover:text-emerald-400 flex items-center gap-1 transition"><Activity className="w-4 h-4" /> Events</a>
-          <a href="/admin" className="hover:text-red-400 flex items-center gap-1 transition"><ShieldAlert className="w-4 h-4 text-red-500" /> Admin</a>
-          <a href="/login" className="bg-red-950/80 hover:bg-red-900 text-red-400 border border-red-600/60 px-4 py-1.5 rounded font-bold transition flex items-center gap-2">
-            <Lock className="w-4 h-4" /> ACCESS SYSTEM
-          </a>
+          <Link href="/challenges" className="hover:text-emerald-400">
+            &gt;_ Challenges
+          </Link>
+          <Link href="/events" className="hover:text-emerald-400">
+            ⚡ Events
+          </Link>
+          
+          {/* Admin Tab Button */}
+          <Link href="/admin" className="text-red-400 hover:text-red-300 font-bold border border-red-900/60 bg-red-950/40 px-3 py-1 rounded">
+            🛡️ Admin
+          </Link>
         </div>
       </nav>
 
-      {/* HERO SECTION */}
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-red-400 text-xs font-bold mb-6 animate-pulse">
-          <Flame className="w-4 h-4 text-red-500" /> SYSTEM DEFCON-1 LEVEL ALERT :: INTRUSION DETECTED
-        </div>
-        
-        <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6 text-white uppercase">
+      {/* Main Content */}
+      <div className="flex flex-col items-center justify-center text-center mt-20 px-4">
+        <span className="text-xs text-red-500 bg-red-950/50 border border-red-800 px-3 py-1 rounded-full mb-4">
+          🔥 SYSTEM DEFCON-1 LEVEL ALERT :: INTRUSION DETECTED
+        </span>
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white max-w-3xl">
           BREACH THE MATRIX. <br />
-          <span className="text-emerald-400 glow-green">TRACE THE THREAT ACTOR.</span>
+          <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">TRACE THE THREAT ACTOR.</span>
         </h1>
-        
-        <p className="max-w-2xl mx-auto text-slate-400 text-sm md:text-base mb-8 leading-relaxed">
+        <p className="text-slate-400 text-sm max-w-2xl mt-4">
           Step into a live Security Operations Center (SOC) incident workspace. Investigate network PCAPs, reverse malware binaries, exploit live web targets, and capture flags.
         </p>
 
-        <div className="flex justify-center gap-4">
-          <a href="/challenges" className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-6 py-3 rounded font-black flex items-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.4)] transition">
-            BROWSE CHALLENGES <ArrowRight className="w-5 h-5" />
-          </a>
-          <a href="/events" className="border border-slate-700 bg-slate-900/80 hover:border-emerald-500 px-6 py-3 rounded font-bold transition">
+        <div className="flex gap-4 mt-8">
+          <Link href="/challenges" className="bg-emerald-500 text-slate-950 font-bold px-6 py-3 rounded hover:bg-emerald-400 transition">
+            BROWSE CHALLENGES &rarr;
+          </Link>
+          <Link href="/events" className="border border-slate-700 bg-slate-900/60 px-6 py-3 rounded hover:bg-slate-800 transition">
             VIEW ACTIVE EVENTS
-          </a>
+          </Link>
         </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section className="max-w-6xl mx-auto px-6 py-12 border-t border-slate-900">
-        <h2 className="text-xs uppercase tracking-widest text-emerald-500 mb-8 text-center">// OPERATIONAL PROTOCOL (HOW IT WORKS)</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="border border-slate-800 bg-slate-900/40 p-6 rounded-lg relative overflow-hidden group hover:border-emerald-500/50 transition">
-            <div className="text-emerald-500 font-bold text-3xl mb-2">01</div>
-            <h3 className="font-bold text-white mb-2 flex items-center gap-2"><Fingerprint className="w-5 h-5 text-emerald-400" /> SELECT CHALLENGE</h3>
-            <p className="text-xs text-slate-400">Filter through Web, OSINT, RE, and Steganography targets according to difficulty.</p>
-          </div>
-
-          <div className="border border-slate-800 bg-slate-900/40 p-6 rounded-lg relative overflow-hidden group hover:border-cyan-500/50 transition">
-            <div className="text-cyan-400 font-bold text-3xl mb-2">02</div>
-            <h3 className="font-bold text-white mb-2 flex items-center gap-2"><Cpu className="w-5 h-5 text-cyan-400" /> LAUNCH INSTANCE</h3>
-            <p className="text-xs text-slate-400">Spin up dynamic, isolated Docker target containers with custom IPs and expiring timers.</p>
-          </div>
-
-          <div className="border border-slate-800 bg-slate-900/40 p-6 rounded-lg relative overflow-hidden group hover:border-red-500/50 transition">
-            <div className="text-red-500 font-bold text-3xl mb-2">03</div>
-            <h3 className="font-bold text-white mb-2 flex items-center gap-2"><Lock className="w-5 h-5 text-red-500" /> CAPTURE THE FLAG</h3>
-            <p className="text-xs text-slate-400">Analyze evidence, exploit flaws, retrieve hidden tokens and submit <code className="text-red-400">RAVEN&#123;...&#125;</code>.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURED CHALLENGES PREVIEW */}
-      <section className="max-w-6xl mx-auto px-6 py-12">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2"><Terminal className="w-5 h-5 text-emerald-400" /> FEATURED TARGETS</h2>
-          <a href="/challenges" className="text-xs text-emerald-400 hover:underline">View all challenges →</a>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Card 1 */}
-          <div className="border border-slate-800 bg-slate-900/60 p-5 rounded-lg">
-            <div className="flex justify-between items-start mb-3">
-              <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded uppercase">Network</span>
-              <span className="text-xs text-amber-400">★ Medium | 250 PTS</span>
-            </div>
-            <h3 className="font-bold text-white mb-1">The Traffic</h3>
-            <p className="text-xs text-slate-400 mb-4 line-clamp-2">Inspect C2 communications captured inside Wireshark network dump.</p>
-            <div className="text-[11px] text-slate-500 flex justify-between items-center">
-              <span>Instance: Available</span>
-              <span className="text-emerald-400 font-bold">142 Solves</span>
-            </div>
-          </div>
-
-          {/* Card 2 */}
-          <div className="border border-slate-800 bg-slate-900/60 p-5 rounded-lg">
-            <div className="flex justify-between items-start mb-3">
-              <span className="text-[10px] bg-red-950 text-red-400 border border-red-800 px-2 py-0.5 rounded uppercase">Reverse Eng.</span>
-              <span className="text-xs text-red-400">★★ Hard | 500 PTS</span>
-            </div>
-            <h3 className="font-bold text-white mb-1">The Implant</h3>
-            <p className="text-xs text-slate-400 mb-4 line-clamp-2">Decompile suspicious GuardianOS binary executable to reveal dynamic keys.</p>
-            <div className="text-[11px] text-slate-500 flex justify-between items-center">
-              <span>Instance: Available</span>
-              <span className="text-emerald-400 font-bold">38 Solves</span>
-            </div>
-          </div>
-
-          {/* Card 3 */}
-          <div className="border border-slate-800 bg-slate-900/60 p-5 rounded-lg">
-            <div className="flex justify-between items-start mb-3">
-              <span className="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-2 py-0.5 rounded uppercase">Web Security</span>
-              <span className="text-xs text-amber-400">★ Medium | 300 PTS</span>
-            </div>
-            <h3 className="font-bold text-white mb-1">Internal Exposure</h3>
-            <p className="text-xs text-slate-400 mb-4 line-clamp-2">Exploit server-side SQL Injection and IDOR vulnerabilities on internal portal.</p>
-            <div className="text-[11px] text-slate-500 flex justify-between items-center">
-              <span>Instance: Active Required</span>
-              <span className="text-emerald-400 font-bold">89 Solves</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="border-t border-slate-900 bg-slate-950/80 px-6 py-8 text-center text-xs text-slate-500">
-        RAVEN//TRACE SOC CTF PLATFORM — AUTHORIZED PERSONNEL ONLY // 2026
-      </footer>
+      </div>
     </div>
   );
 }

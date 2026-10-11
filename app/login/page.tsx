@@ -1,78 +1,76 @@
 "use client";
-import React from "react";
-import { Lock, User, Key, Eye, ShieldCheck, ArrowRight } from "lucide-react";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-mono relative soc-scanline bg-cyber-grid flex items-center justify-center p-6">
-      
-      {/* BACKGROUND FLOATING GLOW DECORATION */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+  const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-      <div className="w-full max-w-md border border-red-900/80 bg-slate-950/90 p-8 rounded-xl relative z-10 shadow-[0_0_30px_rgba(239,68,68,0.15)]">
-        
-        {/* LOGO & TITLE */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center p-3 rounded-full bg-red-950/50 border border-red-600/40 mb-3 animate-pulse">
-            <Eye className="w-8 h-8 text-red-500" />
-          </div>
-          <h1 className="text-2xl font-black tracking-widest text-white uppercase">AUTHENTICATE</h1>
-          <p className="text-xs text-red-500 font-bold mt-1 tracking-wider">// RESTRICTED SOC CLEARANCE REQUIRED</p>
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!username || !password) {
+      setError("Please fill all fields!");
+      return;
+    }
+
+    // Login success simulation
+    localStorage.setItem("userLoggedIn", "true");
+    localStorage.setItem("username", username);
+
+    // Redirect to Home Page
+    router.push("/");
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 font-mono">
+      <div className="max-w-md w-full border border-slate-800 bg-slate-900/80 rounded-xl p-6 shadow-2xl backdrop-blur-md">
+        <div className="text-center mb-6">
+          <span className="text-emerald-400 text-xs uppercase tracking-widest">// SYSTEM AUTHENTICATION</span>
+          <h1 className="text-2xl font-bold text-emerald-400 mt-1">RAVEN//TRACE ACCESS</h1>
+          <p className="text-slate-400 text-xs mt-1">Enter credentials to access the SOC workspace.</p>
         </div>
 
-        {/* LOGIN FORM */}
-        <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-          
-          {/* USERNAME / EMAIL */}
-          <div>
-            <label className="block text-xs uppercase text-slate-400 mb-2 font-bold flex items-center gap-2">
-              <User className="w-3.5 h-3.5 text-emerald-400" /> Username or Agent ID
-            </label>
-            <div className="relative">
-              <input 
-                type="text" 
-                placeholder="agent_alderson" 
-                className="w-full bg-slate-900/80 border border-slate-800 focus:border-red-500 text-white text-sm px-4 py-2.5 rounded outline-none transition font-mono"
-              />
-            </div>
+        {error && (
+          <div className="mb-4 text-xs bg-red-950/80 border border-red-600/50 text-red-400 p-2.5 rounded text-center">
+            {error}
           </div>
+        )}
 
-          {/* PASSWORD */}
+        <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className="block text-xs uppercase text-slate-400 font-bold flex items-center gap-2">
-                <Key className="w-3.5 h-3.5 text-red-400" /> Access Token / Password
-              </label>
-              <a href="#" className="text-[10px] text-red-400 hover:underline">Forgot?</a>
-            </div>
-            <input 
-              type="password" 
-              placeholder="••••••••••••" 
-              className="w-full bg-slate-900/80 border border-slate-800 focus:border-red-500 text-white text-sm px-4 py-2.5 rounded outline-none transition font-mono"
+            <label className="block text-xs text-slate-400 mb-1">USERNAME / HANDLE</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+              placeholder="e.g., agent_raven"
+              required
             />
           </div>
 
-          {/* REMEMBER ME */}
-          <div className="flex items-center gap-2 text-xs text-slate-400">
-            <input type="checkbox" id="remember" className="accent-red-600 rounded bg-slate-900" />
-            <label htmlFor="remember" className="cursor-pointer">Maintain persistent session clearance</label>
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">PASSWORD</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+              placeholder="••••••••"
+              required
+            />
           </div>
 
-          {/* SUBMIT BUTTON */}
-          <button 
-            type="submit" 
-            className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded text-sm transition flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(239,68,68,0.4)]"
+          <button
+            type="submit"
+            className="w-full py-2.5 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500 text-emerald-400 font-bold rounded text-sm transition"
           >
-            <Lock className="w-4 h-4" /> AUTHORIZE LOGIN <ArrowRight className="w-4 h-4" />
+            ENTER WORKSPACE
           </button>
         </form>
-
-        {/* REGISTER LINK */}
-        <div className="mt-6 pt-6 border-t border-slate-900 text-center text-xs text-slate-400">
-          Unregistered Agent?{" "}
-          <a href="/register" className="text-emerald-400 font-bold hover:underline">Request Access Clearance (/register)</a>
-        </div>
-
       </div>
     </div>
   );
